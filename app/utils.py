@@ -1,4 +1,4 @@
-import os,random
+import os,random,ast
 
 
 def clear_screen():
@@ -11,12 +11,13 @@ def registration():
     name = input("REGISTRATION\n\nEnter your name: ")
     clear_screen()
     password = input("REGISTRATION\n\nEnter your password: ")
-    wallet = random.randint(1000000, 9999999)
+    wallet = str(random.randint(1000000, 9999999))
     balance = 0
     with open("DB.txt", "a") as file:
-        file.write(f"{wallet}|{name}|{password}|{balance}\n")
+        file.write(f"{wallet}|{name}|{password}|{balance}| \n")
     clear_screen()
-    return name, wallet, password, balance
+    print("Relaunch program and login :)")
+
 def login(data_dict):
     try:
         wallet = input("LOGIN\n\nEnter your wallet number: ")
@@ -46,6 +47,7 @@ def main_page(name,balance):
     option = input(f"Hello {name}!             Balance: {balance}$\n\n1.Deposit\n2.Withdraw\n3.History of payments\n4.Exit\n\nChoose an option: ")
     return option
 def deposit(balance, data_dict, address):
+    clear_screen()
     try:
         amount = int(input(f"DEPOSIT            Balance: {balance}$\n\nEnter how much you wanna top up your balance: "))
     except ValueError:
@@ -59,11 +61,19 @@ def deposit(balance, data_dict, address):
         except Exception:
             current = 0
         data_dict[address][3] = str(current + amount)
-        return amount
+        return amount,True
     else:
-        return True
-def update_database(data_dict):
+        return True, False
+def update_database(data_dict,transactions,user_wallet,new_trun):
+    if new_trun == True:
+        transactions_data = data_dict[user_wallet][4]
+        if transactions_data == "" or transactions_data is None:
+            new_transactions = []
+        else:
+            new_transactions = ast.literal_eval(transactions_data)
+        new_transactions.append(transactions)
     with open("DB.txt", "w") as file:
+
 
         for address, values in data_dict.items():
 
@@ -72,31 +82,30 @@ def update_database(data_dict):
             password = values[2]
             balance = values[3]
 
-            file.write(f"{wallet}|{name}|{password}|{balance}\n")
-
-def withdraw(balance,data_dict):
+            if user_wallet == wallet and new_trun == True:
+                file.write(f"{wallet}|{name}|{password}|{balance}|{new_transactions}\n")
+            else:
+                file.write(f"{wallet}|{name}|{password}|{balance}| \n")
+def withdraw(balance,data_dict,wallet):
+    clear_screen()
     amount = int(input(f"WITHDRAW            Balance: {balance}$\n\nEnter how much you wanna send: "))
     clear_screen()
     address = input(f"WITHDRAW            Balance: {balance}$\n\nEnter recipient wallet number: ")
+    clear_screen()
     question =  input(f"WITHDRAW            Balance: {balance}$\n\nAre you sure? Y/N: ")
     if question.lower() == "y":
         address = str(address)
-        try:
-            current = int(data_dict[address][3])
-        except Exception:
-            current = 0
+        current = int(data_dict[wallet][3])
+        data_dict[wallet][3] = str(current - amount)
+        current = int(data_dict[address][3])
         data_dict[address][3] = str(current + amount)
-        return amount,address
+        return amount,address,True
     else:
-        return True,None
-def update_database(data_dict):
-    with open("DB.txt", "w") as file:
-
-        for address, values in data_dict.items():
-
-            wallet = values[0]
-            name = values[1]
-            password = values[2]
-            balance = values[3]
-
-            file.write(f"{wallet}|{name}|{password}|{balance}\n")
+        return True,None,False
+def show_history_main(data_dict,user_wallet):
+    clear_screen()
+    print("HISTORY")
+    trunsactions_data = ast.literal_eval(data_dict[user_wallet][4])
+    for item in trunsactions_data:
+        print(item)
+    input("Enter to stop program")
