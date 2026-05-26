@@ -1,0 +1,20 @@
+{
+    "4807186": {
+        "password": "12345",
+        "name": "Misha",
+        "balance": "1000",
+        "transactions": [
+            "Deposit:100",
+            "Deposit:100",
+            "Deposit:1000",
+            "Withdraw to 4242549:100",
+            "Withdraw to 4242549:100"
+        ]
+    },
+    "4242549": {
+        "password": "12345",
+        "name": "Mishka",
+        "balance": "200",
+        "transactions": []
+    }
+}

@@ -3,14 +3,20 @@ from app.wallet import Wallet
 from app.user import User
 
 running = False
-data_from_db = read_info_db()
+
 while not running:
-    option = welcome_page()
+    welcome_cycle = False
+    while not welcome_cycle:
+        option = welcome_page()
+        if option == "1" or option == "2" or option == "3":
+            welcome_cycle = True
+
     first_cycle = False
     while not first_cycle:
         main_cycle = True
         match option:
             case "1":
+                data_from_db = read_info_db()
                 checking,name,wallet,password,balance = login(data_from_db)
                 if checking:
                     user_logged = User(name,wallet,password)
@@ -52,4 +58,7 @@ while not running:
                     continue
             case "3":
                 show_history_main(data_from_db,user_logged.get_info_wallet())
-
+            case "4":
+                main_cycle = True
+                running = True
+                clear_screen()

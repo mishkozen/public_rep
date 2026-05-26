@@ -1,2 +1,0 @@
-1779199|Misha|12345|190|['Deposit:100', 'Deposit:100', 'Deposit:100', 'Withdraw to 1779199:150', 'Withdraw to 1211515:10', 'Withdraw to 1779199:100']
-1211515|Mishka|12345|10| 
